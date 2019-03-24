@@ -14,6 +14,7 @@ tensorflow = "*"
 pillow = "*"
 h5py = "*"
 pydot = "*"
+nltk = "*"
 
 [requires]
 python_version = "3.7"
