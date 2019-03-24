@@ -114,6 +114,7 @@ venv.bak/
 
 # Model Weight
 /src/weights/*.hdf5
+/src/*.hdf5
 
 # Mac OSX
 .DS_Store
