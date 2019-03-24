@@ -102,3 +102,18 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# VS Code
+.vscode
+
+# Big Data
+/data/*.zip
+/data/Flickr8k_Dataset
+/data/Flickr8k_text
+/data/glove.6B
+
+# Model Weight
+/src/weights/*.hdf5
+
+# Mac OSX
+.DS_Store
