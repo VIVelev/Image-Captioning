@@ -16,4 +16,3 @@ Image | Caption
 <img src="https://github.com/VIVelev/Image-Captioning/blob/master/img/examples/ex4.png" width="400"> | **Generated Caption:** Two dogs wrestle either in fun or fight in a grassy field.
 <img src="https://github.com/VIVelev/Image-Captioning/blob/master/img/examples/ex3.png" width="400"> | **Generated Caption:** A man is doing a trick on his bicycle in a skatepark.
 <img src="https://github.com/VIVelev/Image-Captioning/blob/master/img/examples/ex5.png" width="400"> | **Generated Caption:** A group of people are standing in front of a building with flags.
-<img src="https://github.com/VIVelev/Image-Captioning/blob/master/img/examples/ex7.png" width="400"> | **Generated Caption:** A brown dog is splashing in the water with a stick in its mouth.
