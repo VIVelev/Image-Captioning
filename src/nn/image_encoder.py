@@ -1,5 +1,5 @@
 from keras import Model
-from keras.applications.inception_v3 import InceptionV3, preprocess_input
+from keras.applications.inception_v3 import InceptionV3
 from keras.layers import Activation, Dense, Dropout, Input, Reshape
 from keras.optimizers import RMSprop
 

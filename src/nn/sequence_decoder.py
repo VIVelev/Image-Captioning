@@ -3,7 +3,7 @@ from keras.layers import (LSTM, Activation, Dense, Dropout, Embedding, Input,
                           TimeDistributed)
 from keras.optimizers import RMSprop
 
-from ..utils.sequence import init_embedding_matrix
+from ..utils.sequence import init_word_embedding_matrix
 
 __all__ = [
     'SequenceDecoder',
@@ -73,7 +73,7 @@ class SequenceDecoder:
 
         self.model = Model([self.sequence_input, self.image_embedding_input], x, name=self.name)
 
-        embedding_matrix = init_embedding_matrix(self.embedding_dim, self.voc_size, self.word2idx)
+        embedding_matrix = init_word_embedding_matrix(self.embedding_dim, self.voc_size, self.word2idx)
         self.model.get_layer('glove_embeddings').set_weights([embedding_matrix])
         self.model.get_layer('glove_embeddings').trainable = False
 

@@ -1,5 +1,3 @@
-import glob
-
 __all__ = [
     'PATH_TO_DATA',
     'TEXT_FILES_DIR',

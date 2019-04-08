@@ -7,7 +7,7 @@ from .config import PATH_TO_DATA
 __all__ = [
     'clean',
     'load_word_embedding_map',
-    'init_embedding_matrix',
+    'init_word_embedding_matrix',
 ]
 
 
@@ -40,8 +40,8 @@ def load_word_embedding_map(path_to_embeddings=PATH_TO_DATA+'glove.6B/glove.6B.3
     
     return word_embedding
 
-def init_embedding_matrix(dim, voc_size, word2idx):
-    word_embedding = load_word_embedding_map()
+def init_word_embedding_matrix(dim, voc_size, word2idx, path_to_embeddings=PATH_TO_DATA+'glove.6B/glove.6B.300d.txt'):
+    word_embedding = load_word_embedding_map(path_to_embeddings=path_to_embeddings)
     embedding_matrix = np.zeros((voc_size, dim))
 
     for word, idx in word2idx.items():

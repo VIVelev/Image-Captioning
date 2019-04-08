@@ -155,7 +155,6 @@ class NICInference:
         target_seq[:, 0, 0] = self.word2idx['<START>']
 
         # Init
-        stop_condition = False
         candidates = [
             [list(), 0] for _ in range(beam_width)
         ]
@@ -204,7 +203,7 @@ class NICInference:
 
         return sequences[np.argmax(scores)]
 
-    def predict_logprob(self, img, sent):
+    def predict_logprob(self, image, sent):
         sent = [self.word2idx[word] for word in sent.split()]
 
         output_probs, _, _ = self.inference_model.predict(

@@ -88,8 +88,8 @@ def data_generator(image_descriptions_set, word2idx, max_length, num_imgs_per_ba
                 X_img.append(img)
                 
                 # encode the sequence
-                y_seq = [word2idx[word] for word in desc.split()] + [word2idx['<EOS>']]
-                x_seq = [word2idx['<SOS>']] + y_seq[:-1]
+                y_seq = [word2idx[word] for word in desc.split()] + [word2idx['<END>']]
+                x_seq = [word2idx['<START>']] + y_seq[:-1]
                 
                 Y_seq.append(y_seq)
                 X_seq.append(x_seq)

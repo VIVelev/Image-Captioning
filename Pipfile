@@ -6,6 +6,7 @@ verify_ssl = true
 [dev-packages]
 jupyter = "*"
 pylint = "*"
+pydot = "*"
 
 [packages]
 numpy = "*"
@@ -14,7 +15,6 @@ keras = "*"
 tensorflow = "*"
 pillow = "*"
 h5py = "*"
-pydot = "*"
 nltk = "*"
 
 [requires]
