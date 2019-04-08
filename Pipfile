@@ -4,9 +4,10 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+jupyter = "*"
+pylint = "*"
 
 [packages]
-jupyter = "*"
 numpy = "*"
 matplotlib = "*"
 keras = "*"
