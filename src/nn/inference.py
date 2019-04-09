@@ -107,24 +107,7 @@ class NICInference:
             # Sample a token
             sampled_token_index = np.argmax(output_tokens[0, 0, :])
             sampled_word = self.idx2word[sampled_token_index]
-
-            if sampled_word == '{':
-                decoded_tokens.append(' ')
-                decoded_tokens.append(sampled_word)
-                decoded_tokens.append('\n')
-
-            elif sampled_word == '}':
-                if self.idx2word[target_seq[0, 0]] != '}':
-                    decoded_tokens.append('\n')
-                decoded_tokens.append(sampled_word)
-                decoded_tokens.append('\n')
-
-            elif sampled_word == ',':
-                decoded_tokens.append(sampled_word)
-                decoded_tokens.append(' ')
-
-            else:
-                decoded_tokens.append(sampled_word)
+            decoded_tokens.append(sampled_word)
 
             # Exit condition
             if sampled_word == '<END>' or len(decoded_tokens) > self.neural_image_captioning.maxlen*3:
@@ -139,7 +122,7 @@ class NICInference:
         if '<END>' in decoded_tokens:
             decoded_tokens.remove('<END>')
 
-        return ''.join(decoded_tokens)
+        return ' '.join(decoded_tokens)
 
     def beam_search(self, image, beam_width=3, alpha=0.7):
         """Beam Search Inference"""
@@ -170,8 +153,10 @@ class NICInference:
                     skip_idxs.append(i)
                     continue
                 
-                output_tokens, h_state, c_state = self.inference_model.predict([target_seq[i]]+states_values[i])
-                states_values[i] = [h_state, c_state]
+                [output_tokens,
+                h_state_1, c_state_1,
+                h_state_2, c_state_2] = self.inference_model.predict([target_seq[i]]+states_values[i])
+                states_values[i] = [h_state_1, c_state_1, h_state_2, c_state_2]
                 word_probabilities = output_tokens[0, 0, :]
                 
                 for j in range(len(word_probabilities)):
@@ -206,7 +191,7 @@ class NICInference:
     def predict_logprob(self, image, sent):
         sent = [self.word2idx[word] for word in sent.split()]
 
-        output_probs, _, _ = self.inference_model.predict(
+        output_probs, _, _, _, _ = self.inference_model.predict(
             [pad_sequences([sent], self.neural_image_captioning.maxlen, padding='post')] + self.get_initial_lstm_states(image)
         )
         output_probs = output_probs[0, :len(sent):, :]

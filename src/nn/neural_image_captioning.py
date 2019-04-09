@@ -1,10 +1,8 @@
 from keras import Model
-from keras.layers import Input
 from keras.optimizers import RMSprop
 
-from ..utils.config import IMAGE_SIZE
-from .sequence_decoder import SequenceDecoder
 from .image_encoder import ImageEncoder
+from .sequence_decoder import SequenceDecoder
 
 __all__ = [
     'NeuralImageCaptioning',
@@ -34,13 +32,13 @@ class NeuralImageCaptioning:
         self.word2idx = word2idx
         self.name = name
 
-        # Inputs
-        self.image_input = Input(IMAGE_SIZE, name='image_input')
-        self.sequence_input = Input((maxlen,), name='sequence_input')
-
         # Encoder / Decoder
         self.image_encoder = ImageEncoder(embedding_dim).build_model()
         self.sequence_decoder = SequenceDecoder(maxlen, embedding_dim, voc_size, num_hidden_neurons, word2idx).build_model()
+
+        # Inputs
+        self.image_input = self.image_encoder.image_input
+        self.sequence_input = self.sequence_decoder.sequence_input
 
         self.model = None
 

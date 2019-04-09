@@ -1,9 +1,7 @@
 from keras import Model
 from keras.applications.inception_v3 import InceptionV3
-from keras.layers import Activation, Dense, Dropout, Input, Reshape
+from keras.layers import Activation, Dense, Dropout, Reshape
 from keras.optimizers import RMSprop
-
-from ..utils.config import IMAGE_SIZE
 
 __all__ = [
     'ImageEncoder',
@@ -26,13 +24,15 @@ class ImageEncoder:
         self.embedding_dim = embedding_dim
         self.name = name
 
-        self.image_input = Input(IMAGE_SIZE, name='image_input')
-
         # Get the InceptionV3 model trained on imagenet data
         self.inceptionv3 = InceptionV3(weights='imagenet')
-        # Remove the last layer (output softmax layer) from the inception v3
-        self.inceptionv3 = Model(self.inceptionv3.input, self.inceptionv3.layers[-2].output, name='inceptionv3')
+        # Cut till 2048 Dense Layer
+        self.inceptionv3 = Model(self.inceptionv3.input, self.inceptionv3.layers[-2].output)
 
+        # Inputs
+        self.image_input = self.inceptionv3.input
+
+        # Top
         self.dropout_encoder = Dropout(0.5, name='dropout_encoder')
         self.dense_encoder = Dense(self.embedding_dim, name='dense_encoder')
         self.relu_encoder = Activation('relu', name='relu_encoder')
@@ -41,7 +41,7 @@ class ImageEncoder:
         self.model = None
 
     def build_model(self):
-        x = self.inceptionv3(self.image_input)
+        x = self.inceptionv3.output
         x = self.dropout_encoder(x)
         x = self.dense_encoder(x)
         x = self.relu_encoder(x)
