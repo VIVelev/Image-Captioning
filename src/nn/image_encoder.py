@@ -28,6 +28,11 @@ class ImageEncoder:
         self.inceptionv3 = InceptionV3(weights='imagenet')
         # Cut till 2048 Dense Layer
         self.inceptionv3 = Model(self.inceptionv3.input, self.inceptionv3.layers[-2].output)
+        # Fix / Fine-tune
+        for layer in self.inceptionv3.layers[:-4]:
+            layer.trainable = False
+        for layer in self.inceptionv3.layers[-4:]:
+            layer.trainable = True
 
         # Inputs
         self.image_input = self.inceptionv3.input
