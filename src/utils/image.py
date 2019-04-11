@@ -21,7 +21,7 @@ def load_image(x, target_size=IMAGE_SIZE[:-1], preprocess=True):
 
     return x
 
-def load_image_embedding_map(set_type, image2descriptions_set):
+def load_image_embedding_map(set_type, image2descriptions):
     try:
         with open(set_type+'_image_embedding_map.bin', 'rb') as f:
             image2embedding = pickle.load(f)
@@ -32,7 +32,7 @@ def load_image_embedding_map(set_type, image2descriptions_set):
 
         encoder = InceptionV3Encoder()
         image2embedding = dict()
-        for img_id, _ in image2descriptions_set.items():
+        for img_id, _ in image2descriptions.items():
             img = load_image(img_id, preprocess=True)
             image2embedding[img_id] = encoder.encode_image(img)
 
