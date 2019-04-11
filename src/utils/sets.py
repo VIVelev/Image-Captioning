@@ -1,21 +1,14 @@
-import pickle
-
 import numpy as np
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils import to_categorical
 
-from ..nn.inceptionv3_encoder import InceptionV3Encoder
-from .config import IMAGE_SIZE, TEXT_FILES_DIR
-from .image import load_image
+from .config import TEXT_FILES_DIR
 
 __all__ = [
     'load_raw_image_description_map',
     'init_image_descriptions_map',
-    'init_word2idx',
-    'init_idx2word',
     'load_set_images',
     'init_image_descriptions_set',
-    'load_image_embedding_map',
     'data_generator',
 ]
 
@@ -41,12 +34,6 @@ def init_image_descriptions_map():
             i+=1
             
     return image_descriptions
-
-def init_word2idx(vocabulary):
-    return {val: key for key, val in enumerate(vocabulary)}
-    
-def init_idx2word(vocabulary):
-    return {key: val for key, val in enumerate(vocabulary)}
 
 def load_set_images(type):
     if type == 'train':
@@ -75,28 +62,6 @@ def init_image_descriptions_set(set_images, image_descriptions):
             )
     
     return image_descriptions_set
-
-def load_image_embedding_map(set_type, image_descriptions_set):
-    try:
-        with open('./image_embedding_'+set_type+'.bin', 'rb') as f:
-            image_embedding = pickle.load(f)
-        print('"{}" Image-Embedding Map loaded.'.format(set_type))        
-
-    except FileNotFoundError:
-        print('Creating "{}" Image-Embedding Map...'.format(set_type))
-
-        encoder = InceptionV3Encoder()
-        image_embedding = dict()
-        for img_id, _ in image_descriptions_set.items():
-            img = load_image(img_id, preprocess=True)
-            image_embedding[img_id] = encoder.encode_image(img)
-
-        with open('./image_embedding_'+set_type+'.bin', 'wb') as f:
-            pickle.dump(image_embedding, f)
-
-        print('Done.')
-    
-    return image_embedding
 
 def data_generator(image_descriptions_set, image_embedding_set, word2idx, max_length, num_imgs_per_batch, voc_size):
     X_img = []

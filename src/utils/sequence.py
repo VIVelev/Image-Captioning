@@ -5,11 +5,19 @@ import numpy as np
 from .config import PATH_TO_DATA
 
 __all__ = [
+    'init_word2idx',
+    'init_idx2word',
     'clean',
     'load_word_embedding_map',
     'init_word_embedding_matrix',
 ]
 
+
+def init_word2idx(vocabulary):
+    return {val: key for key, val in enumerate(vocabulary)}
+    
+def init_idx2word(vocabulary):
+    return {key: val for key, val in enumerate(vocabulary)}
 
 def clean(sentence):
     # Tokenize
