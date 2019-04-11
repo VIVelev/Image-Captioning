@@ -5,19 +5,12 @@ import numpy as np
 from .config import PATH_TO_DATA
 
 __all__ = [
-    'init_word2idx',
-    'init_idx2word',
     'clean',
+    'init_idx_word_map',
+    'init_word_idx_map',
     'load_word_embedding_map',
-    'init_word_embedding_matrix',
+    'init_word_embeddings_matrix',
 ]
-
-
-def init_word2idx(vocabulary):
-    return {val: key for key, val in enumerate(vocabulary)}
-    
-def init_idx2word(vocabulary):
-    return {key: val for key, val in enumerate(vocabulary)}
 
 def clean(sentence):
     # Tokenize
@@ -38,23 +31,29 @@ def clean(sentence):
     
     return ' '.join(tokens)
 
+def init_idx_word_map(vocabulary):
+    return {key: val for key, val in enumerate(vocabulary)}
+
+def init_word_idx_map(vocabulary):
+    return {val: key for key, val in enumerate(vocabulary)}
+
 def load_word_embedding_map(path_to_embeddings=PATH_TO_DATA+'glove.6B/glove.6B.300d.txt'):
-    word_embedding = dict()
+    word2embedding = dict()
 
     with open(path_to_embeddings, encoding='utf-8') as f_embeddings:
         for line in f_embeddings:
             values = line.split()
-            word_embedding[values[0]] = np.asarray(values[1:], dtype='float64')
+            word2embedding[values[0]] = np.asarray(values[1:], dtype='float64')
     
-    return word_embedding
+    return word2embedding
 
-def init_word_embedding_matrix(dim, voc_size, word2idx, path_to_embeddings=PATH_TO_DATA+'glove.6B/glove.6B.300d.txt'):
-    word_embedding = load_word_embedding_map(path_to_embeddings=path_to_embeddings)
+def init_word_embeddings_matrix(dim, voc_size, word2idx, path_to_embeddings=PATH_TO_DATA+'glove.6B/glove.6B.300d.txt'):
+    word2embedding = load_word_embedding_map(path_to_embeddings=path_to_embeddings)
     embedding_matrix = np.zeros((voc_size, dim))
 
     for word, idx in word2idx.items():
         try:
-            embedding_matrix[idx, :] = word_embedding[word]
+            embedding_matrix[idx, :] = word2embedding[word]
         except KeyError:
             pass
         

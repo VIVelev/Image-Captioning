@@ -21,24 +21,24 @@ def load_image(x, target_size=IMAGE_SIZE[:-1], preprocess=True):
 
     return x
 
-def load_image_embedding_map(set_type, image_descriptions_set):
+def load_image_embedding_map(set_type, image2descriptions_set):
     try:
         with open(set_type+'_image_embedding_map.bin', 'rb') as f:
-            image_embedding = pickle.load(f)
+            image2embedding = pickle.load(f)
         print('"{}" Image-Embedding Map loaded.'.format(set_type))        
 
     except FileNotFoundError:
         print('Creating "{}" Image-Embedding Map...'.format(set_type))
 
         encoder = InceptionV3Encoder()
-        image_embedding = dict()
-        for img_id, _ in image_descriptions_set.items():
+        image2embedding = dict()
+        for img_id, _ in image2descriptions_set.items():
             img = load_image(img_id, preprocess=True)
-            image_embedding[img_id] = encoder.encode_image(img)
+            image2embedding[img_id] = encoder.encode_image(img)
 
         with open(set_type+'_image_embedding_map.bin', 'wb') as f:
-            pickle.dump(image_embedding, f)
+            pickle.dump(image2embedding, f)
 
         print('Done.')
     
-    return image_embedding
+    return image2embedding
