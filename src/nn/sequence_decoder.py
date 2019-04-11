@@ -18,7 +18,7 @@ class SequenceDecoder:
     Parameters:
     -----------
     maxlen : integer, the maximum code length
-    embedding_dim : integer, the dimension in which to embed the sketch image and the tokens
+    embedding_dim : integer, the dimension in which to embed the image and the tokens
     voc_size : integer, number of unique tokens in the vocabulary
     num_hidden_neurons : list with length of 2, specifying the number of hidden neurons in the LSTM decoders
     name : string, the name of the model, optional
@@ -73,6 +73,7 @@ class SequenceDecoder:
 
         self.model = Model([self.sequence_input, self.image_embedding_input], x, name=self.name)
 
+        # Load Fixed GloVe Word Embeddings
         embedding_matrix = init_word_embedding_matrix(self.embedding_dim, self.voc_size, self.word2idx)
         self.model.get_layer('glove_embeddings').set_weights([embedding_matrix])
         self.model.get_layer('glove_embeddings').trainable = False
