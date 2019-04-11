@@ -72,7 +72,7 @@ def shuffled_dict_keys(x):
 
 def map2matrix(x):
     matrix = []
-    for key, vals in x:
+    for key, vals in x.items():
         for val in vals:
             matrix.append([key, val])
 
