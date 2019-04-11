@@ -23,7 +23,7 @@ def load_image(x, target_size=IMAGE_SIZE[:-1], preprocess=True):
 
 def load_image_embedding_map(set_type, image_descriptions_set):
     try:
-        with open('./image_embedding_'+set_type+'.bin', 'rb') as f:
+        with open(set_type+'_image_embedding_map.bin', 'rb') as f:
             image_embedding = pickle.load(f)
         print('"{}" Image-Embedding Map loaded.'.format(set_type))        
 
@@ -36,7 +36,7 @@ def load_image_embedding_map(set_type, image_descriptions_set):
             img = load_image(img_id, preprocess=True)
             image_embedding[img_id] = encoder.encode_image(img)
 
-        with open('./image_embedding_'+set_type+'.bin', 'wb') as f:
+        with open(set_type+'_image_embedding_map.bin', 'wb') as f:
             pickle.dump(image_embedding, f)
 
         print('Done.')
