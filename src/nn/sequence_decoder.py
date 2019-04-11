@@ -45,7 +45,7 @@ class SequenceDecoder:
             mask_zero=True,
             name='glove_embeddings'
         )
-        self.embeddings_dropout = Dropout(0.5, name='embeddings_dropout')
+        self.embeddings_dropout = Dropout(rate=0.5, name='embeddings_dropout')
 
         # LSTM decoders
         self.lstm_decoder_1 = LSTM(num_hidden_neurons[0], return_sequences=True, return_state=True, name='lstm_decoder_1')
@@ -56,6 +56,7 @@ class SequenceDecoder:
         self.softmax_decoder = TimeDistributed(Activation('softmax', name='softmax_layer'), name='softmax_decoder')
 
         self.model = None
+        self.build_model()
 
     def build_model(self):
         """Builds a Keras Model to train/predict"""

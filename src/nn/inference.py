@@ -69,7 +69,9 @@ class NICInference:
 
     def get_image_embedding(self, image):
         """Takes an image as an input and returns the fixed size feature vector"""
-        return self.neural_image_captioning.image_encoder.model.predict(np.expand_dims(image, 0))
+        image_embedding = self.neural_image_captioning.inceptionv3_encoder.encode_image(image)
+        final_image_embedding = self.neural_image_captioning.top_image_encoder.model.predict(np.expand_dims(image_embedding, 0))
+        return final_image_embedding
 
     def get_initial_lstm_states(self, image):
         """Takes an image as an input and returns the context vectors (hidden and cell states of a LSTM network)"""

@@ -1,7 +1,10 @@
+import pickle
+
 import numpy as np
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils import to_categorical
 
+from ..nn.inceptionv3_encoder import InceptionV3Encoder
 from .config import IMAGE_SIZE, TEXT_FILES_DIR
 from .image import load_image
 
@@ -12,6 +15,7 @@ __all__ = [
     'init_idx2word',
     'load_set_images',
     'init_image_descriptions_set',
+    'load_image_embedding_map',
     'data_generator',
 ]
 
@@ -72,20 +76,42 @@ def init_image_descriptions_set(set_images, image_descriptions):
     
     return image_descriptions_set
 
-def data_generator(image_descriptions_set, word2idx, max_length, num_imgs_per_batch, voc_size):
+def load_image_embedding_map(set_type, image_descriptions_set):
+    try:
+        with open('./image_embedding_'+set_type+'.bin', 'rb') as f:
+            image_embedding = pickle.load(f)
+        print('"{}" Image-Embedding Map loaded.'.format(set_type))        
+
+    except FileNotFoundError:
+        print('Creating "{}" Image-Embedding Map...'.format(set_type))
+
+        encoder = InceptionV3Encoder()
+        image_embedding = dict()
+        for img_id, _ in image_descriptions_set.items():
+            img = load_image(img_id, preprocess=True)
+            image_embedding[img_id] = encoder.encode_image(img)
+
+        with open('./image_embedding_'+set_type+'.bin', 'wb') as f:
+            pickle.dump(image_embedding, f)
+
+        print('Done.')
+    
+    return image_embedding
+
+def data_generator(image_descriptions_set, image_embedding_set, word2idx, max_length, num_imgs_per_batch, voc_size):
     X_img = []
     X_seq = []
     Y_seq = []
     n = 0
-    
+
     # loop for ever over images
     while True:
         for img_id, desc_list in image_descriptions_set.items():
             # retrieve the image
-            img = load_image(img_id, preprocess=False)
+            image_emb = image_embedding_set[img_id]
 
             for desc in desc_list:
-                X_img.append(img)
+                X_img.append(image_emb)
                 
                 # encode the sequence
                 y_seq = [word2idx[word] for word in desc.split()] + [word2idx['<END>']]

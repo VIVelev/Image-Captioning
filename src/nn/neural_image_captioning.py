@@ -1,7 +1,8 @@
 from keras import Model
 from keras.optimizers import RMSprop
 
-from .image_encoder import ImageEncoder
+from .inceptionv3_encoder import InceptionV3Encoder
+from .top_image_encoder import TopImageEncoder
 from .sequence_decoder import SequenceDecoder
 
 __all__ = [
@@ -33,21 +34,23 @@ class NeuralImageCaptioning:
         self.name = name
 
         # Encoder / Decoder
-        self.image_encoder = ImageEncoder(embedding_dim).build_model()
-        self.sequence_decoder = SequenceDecoder(maxlen, embedding_dim, voc_size, num_hidden_neurons, word2idx).build_model()
+        self.inceptionv3_encoder = InceptionV3Encoder()
+        self.top_image_encoder = TopImageEncoder(embedding_dim, self.inceptionv3_encoder.model.output_shape[1])
+        self.sequence_decoder = SequenceDecoder(maxlen, embedding_dim, voc_size, num_hidden_neurons, word2idx)
 
         # Inputs
-        self.image_input = self.image_encoder.image_input
+        self.image_embedding_input = self.top_image_encoder.image_embedding_input
         self.sequence_input = self.sequence_decoder.sequence_input
 
         self.model = None
+        self.build_model()
 
     def build_model(self):
         """Builds a Keras Model to train/predict"""
 
-        image_embedding = self.image_encoder.model(self.image_input)
-        sequence_output = self.sequence_decoder.model([self.sequence_input, image_embedding])
+        final_image_embedding = self.top_image_encoder.model(self.image_embedding_input)
+        sequence_output = self.sequence_decoder.model([self.sequence_input, final_image_embedding])
 
-        self.model = Model([self.image_input, self.sequence_input], sequence_output, name=self.name)
+        self.model = Model([self.image_embedding_input, self.sequence_input], sequence_output, name=self.name)
         self.model.compile(RMSprop(1e-4), loss='categorical_crossentropy')
         return self
