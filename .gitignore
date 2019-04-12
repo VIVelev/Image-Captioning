@@ -111,7 +111,7 @@ venv.bak/
 /data/Flickr8k_Dataset
 /data/Flickr8k_text
 /data/glove.6B
-/src/notebooks/**.bin
+/src/notebooks/*.bin
 
 # Model Weight
 /src/weights/*.hdf5
