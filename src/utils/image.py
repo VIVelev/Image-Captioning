@@ -12,8 +12,12 @@ __all__ = [
 ]
 
 
-def load_image(x, target_size=IMAGE_SIZE[:-1], preprocess=True):
-    x = image.load_img(IMAGES_DIR+x+'.jpg', target_size=target_size)
+def load_image(x, target_size=IMAGE_SIZE[:-1], preprocess=True, from_set=True):
+    if from_set:
+        x = image.load_img(IMAGES_DIR+x+'.jpg', target_size=target_size)
+    else:
+        x = image.load_img(x, target_size=target_size)
+
     x = image.img_to_array(x)
     
     if preprocess:
