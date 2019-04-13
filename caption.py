@@ -8,8 +8,8 @@ EMBEDDING_DIM = 300
 NUM_HIDDEN_NEURONS = [256, 256]
 
 MAXLEN = 37
-VOC_SIZE = 8767
 word2idx = json.load(open('./word2idx.json'))
+VOC_SIZE = len(word2idx)
 
 
 if __name__ == '__main__':
