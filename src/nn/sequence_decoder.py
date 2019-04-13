@@ -3,6 +3,7 @@ from keras.layers import (LSTM, Activation, Dense, Dropout, Embedding, Input,
                           TimeDistributed)
 from keras.optimizers import RMSprop
 
+from ..utils.config import PATH_TO_DATA
 from ..utils.sequence import init_word_embeddings_matrix
 
 __all__ = [
@@ -75,7 +76,12 @@ class SequenceDecoder:
         self.model = Model([self.sequence_input, self.image_embedding_input], x, name=self.name)
 
         # Load Fixed GloVe Word Embeddings
-        word_embeddings_matrix = init_word_embeddings_matrix(self.embedding_dim, self.voc_size, self.word2idx)
+        word_embeddings_matrix = init_word_embeddings_matrix(
+            self.embedding_dim,
+            self.voc_size,
+            self.word2idx,
+            path_to_embeddings=PATH_TO_DATA+'glove.6B/glove.6B.'+str(self.embedding_dim)+'d.txt'
+        )
         self.model.get_layer('glove_embeddings').set_weights([word_embeddings_matrix])
         self.model.get_layer('glove_embeddings').trainable = False
 
